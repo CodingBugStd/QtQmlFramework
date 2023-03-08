@@ -4,10 +4,6 @@ SOURCES += \
         BackendThread.cpp \
         main.cpp
 
-resources.files = main.qml 
-resources.prefix = /$${TARGET}
-RESOURCES += resources
-
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH =
 
@@ -21,3 +17,6 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
     BackendThread.h
+
+DISTFILES += \
+    UI/main.qml
