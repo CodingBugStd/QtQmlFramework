@@ -4,6 +4,8 @@
 
 #include "BackendThread.h"
 
+QObject* qmlObj = 0;
+
 int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
@@ -20,6 +22,9 @@ int main(int argc, char *argv[])
             QCoreApplication::exit(-1);
     }, Qt::QueuedConnection);
     engine.load(url);
+
+    //获取UI对象，方便c/c++控制UI
+    qmlObj = engine.rootObjects().at(0);
 
     return app.exec();
 }
