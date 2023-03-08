@@ -32,7 +32,9 @@ BackendThread::~BackendThread()
 
 }
 
-void BackendThread::interfaceDemo()
+void BackendThread::incClickCount()
 {
-
+    static int count = 0;
+    count++;
+    qmlObj->setProperty( "clickCount" , count );
 }

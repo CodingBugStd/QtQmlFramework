@@ -12,7 +12,7 @@ public:
 
 //对qml开放的接口
 public:
-    Q_INVOKABLE void interfaceDemo();
+    Q_INVOKABLE void incClickCount();
 
 //线程
 private:
