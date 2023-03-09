@@ -9,6 +9,7 @@ QObject* qmlObj = 0;
 int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
+    QCoreApplication::setAttribute(Qt::AA_UseSoftwareOpenGL);
 
     QQmlApplicationEngine engine;
 

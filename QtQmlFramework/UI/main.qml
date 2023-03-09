@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Controls
+import QtQml
 
 Window {
     width: 640
@@ -9,6 +10,10 @@ Window {
 
     property string testStr: ""
     property int clickCount: 0
+
+    Component.onCompleted:{
+        backend.qmlCompleted()
+    }
 
     Item{
         Text{
