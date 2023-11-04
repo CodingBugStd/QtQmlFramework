@@ -1,38 +1,42 @@
 #include "BackendThread.h"
-#include <windows.h>
+#include <unistd.h>
 #include <QVariant>
+#include <QDebug>
 
-//唯一实例
-BackendThread BackendThread::backendThread;
-
-//UI对象
-extern QObject* qmlObj;
+void BackendThread::setBackendQmlObj(QObject* qmlObj)
+{
+    _qmlObj = qmlObj;
+}
 
 //后台线程
-void* BackendThread::_main(void*param)
+void BackendThread::_threadFunc()
 {
-    sem_wait( &backendThread._rootUiCompleted );
-    Sleep(100);
-    qmlObj->setProperty( "testStr" , "Hello Qml , I'm c++ obj." );
+    sleep(1);
+    _qmlObj->setProperty( "testStr" , "Hello Qml , I'm c++ obj." );
 
     while(1)
     {
-
     }
-    return param;
+    return;
 }
 
 void BackendThread::incClickCount()
 {
     static int count = 0;
     count++;
-    qmlObj->setProperty( "clickCount" , count );
+    _qmlObj->setProperty( "clickCount" , count );
 }
 
 BackendThread::BackendThread() : QObject{NULL}
 {
-    sem_init( &_rootUiCompleted , 0 , 0 );
-    pthread_create( &_thread , NULL , _main , this );
+    _thread = 0;
+    _qmlObj = 0;
+}
+
+void BackendThread::backendStart()
+{
+    _thread = new std::thread(&BackendThread::_threadFunc , this);
+    _thread->detach();      //分离子线程
 }
 
 BackendThread::~BackendThread()
@@ -41,5 +45,4 @@ BackendThread::~BackendThread()
 
 void BackendThread::qmlCompleted()
 {
-    sem_post( &_rootUiCompleted );
 }

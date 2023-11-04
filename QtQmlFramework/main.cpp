@@ -3,18 +3,38 @@
 #include <QQmlContext>
 
 #include "BackendThread.h"
+#include "elog.h"
 
-QObject* qmlObj = 0;
+#include <string.h>
+
+void log_module_init(void)
+{
+    elog_init();
+
+    elog_set_text_color_enabled(0);
+
+    elog_set_fmt( ELOG_LVL_VERBOSE , ELOG_FMT_LVL | ELOG_FMT_TAG | ELOG_FMT_TIME );
+    elog_set_fmt( ELOG_LVL_DEBUG , ELOG_FMT_LVL | ELOG_FMT_TAG | ELOG_FMT_TIME);
+    elog_set_fmt( ELOG_LVL_INFO , ELOG_FMT_LVL | ELOG_FMT_TAG | ELOG_FMT_TIME);
+    elog_set_fmt( ELOG_LVL_WARN , ELOG_FMT_LVL | ELOG_FMT_TAG | ELOG_FMT_TIME );
+    elog_set_fmt( ELOG_LVL_ERROR , ELOG_FMT_LVL | ELOG_FMT_TAG | ELOG_FMT_TIME );
+
+    elog_start();
+}
 
 int main(int argc, char *argv[])
 {
+    log_module_init();
+
     QGuiApplication app(argc, argv);
     QCoreApplication::setAttribute(Qt::AA_UseSoftwareOpenGL);
 
     QQmlApplicationEngine engine;
 
+    BackendThread* backend = new BackendThread;
+
     //将封装了业务逻辑的backend实例添加到UI引擎中，方便qml直接调用后台
-    engine.rootContext()->setContextProperty( "backend" , &BackendThread::backendThread );
+    engine.rootContext()->setContextProperty( "backend" , backend );
 
     const QUrl url("./UI/main.qml");
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
@@ -25,7 +45,15 @@ int main(int argc, char *argv[])
     engine.load(url);
 
     //获取UI对象，方便c/c++控制UI
-    qmlObj = engine.rootObjects().at(0);
+    QObject* qmlObj = engine.rootObjects().at(0);
+    backend->setBackendQmlObj(qmlObj);
+    backend->backendStart();
+
+    elog_v("test","verbose log");
+    elog_d("test","debug log");
+    elog_i("test","info log");
+    elog_w("test","warn log");
+    elog_e("test","err log");
 
     return app.exec();
 }

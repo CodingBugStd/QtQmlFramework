@@ -11,6 +11,7 @@ Window {
     property string testStr: ""
     property int clickCount: 0
 
+    //qml对象构建完成，向后台线程发送信号
     Component.onCompleted:{
         backend.qmlCompleted()
     }
