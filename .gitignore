@@ -1,0 +1,5 @@
+QtQmlFramework/.qtc_clangd
+QtQmlFramework/.qmake.stash
+QtQmlFramework/Makefile
+QtQmlFramework/Makefile.Debug
+QtQmlFramework/Makefile.Release

@@ -36,7 +36,15 @@ int main(int argc, char *argv[])
     //将封装了业务逻辑的backend实例添加到UI引擎中，方便qml直接调用后台
     engine.rootContext()->setContextProperty( "backend" , backend );
 
-    const QUrl url("./UI/main.qml");
+    //将qml UI文件载入邀请
+    QUrl url("./UI/main.qml");
+    if( !url.isEmpty() )
+    {
+        elog_w("main","Can`t find qml file in file system.");
+        elog_w("main","Use internal default UI.");
+        url = QUrl(QStringLiteral("qrc:/default_ui.qml"));
+    }
+
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
                      &app, [url](QObject *obj, const QUrl &objUrl) {
         if (!obj && url == objUrl)

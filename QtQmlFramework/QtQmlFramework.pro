@@ -34,4 +34,10 @@ HEADERS += \
     easylogger/port/elog_qt_api.h
 
 DISTFILES += \
+    UI/default_ui.qml \
+    UI/log_monitor.qml \
+    UI/main.qml
+
+RESOURCES += \
+    UI/default_ui.qml \
     UI/main.qml
